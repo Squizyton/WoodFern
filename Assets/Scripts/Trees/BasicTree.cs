@@ -10,7 +10,7 @@ public abstract class BasicTree : MonoBehaviour,IHittable,IInteractable
 {
     [Title("Tree Variables")]
     [SerializeField] protected int health = 5;
-    [SerializeField] protected GameObject pickUpMaterial;
+    [SerializeField] protected LootTable lootTable;
     [SerializeField] protected int growRate;
     [SerializeField] protected int maxGrowRate;
     [SerializeField] protected float radius;
@@ -29,7 +29,7 @@ public abstract class BasicTree : MonoBehaviour,IHittable,IInteractable
         
         var pos = new Vector3(xPos,materialSpawnPoint.position.y,zPos);
         
-        Instantiate(pickUpMaterial,pos,Quaternion.identity);
+        Instantiate(LootManager.GenerateItem(lootTable),pos,Quaternion.identity);
     }
 
 

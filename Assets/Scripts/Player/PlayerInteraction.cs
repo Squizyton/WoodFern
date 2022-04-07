@@ -9,18 +9,23 @@ public class PlayerInteraction : MonoBehaviour
 {
     public static PlayerInteraction instance;
 
+    [Title("Interaction Settings")]
     public IInteractable.InteractionType lookingAt;
     private float coolDown = 0.5f;
     private float coolDownTimer = 0;
     private Action onInteract;
     private Transform cachedHit;
 
+    [Title("Overlap Settings")]
     [SerializeField] private Transform eyes;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] private float lookDistance;
     [SerializeField] private float overlapRadius;
     [SerializeField] private Collider[] cachedOverlapResults;
-
+    
+    
+    [Title("Current Interaction Mode")]
+    [SerializeField] private GameMode currentMode;
 
     [Title("Debug Values")] public GameObject closestOverlap;
     public bool showRay;
@@ -33,69 +38,56 @@ public class PlayerInteraction : MonoBehaviour
 
     public void Update()
     {
-        #region Raycasting
-
-        /*
-         RaycastHit hit;
-         
-         if(Physics.Raycast(transform.position, transform.forward, out hit, lookDistance,interactableMask))
-         {
-             Debug.Log(hit.transform);
-             
-             if(hit.transform != cachedHit && hit.collider.GetComponent<IInteractable>() != null)
-             {
-                 Debug.Log("THIIIIIIIIING");
-                 
-                 //Cache the hit so we dont keep trying to GetComponent every frame
-                 cachedHit = hit.transform;
-                 
-                 //Get the interaction type of the object we are looking at
-                 IInteractable interactable = hit.collider.GetComponent<IInteractable>();
-                 
-                 //If the object is interactable, set the lookingAt variable to the interaction type
-                 lookingAt = interactable.Interaction;
- 
-                 Debug.Log(lookingAt);
-                 //Set the onInteract action based on the interaction type
-                 SwitchInteraction(lookingAt);
-             }
-         }
-         */
-
-        #endregion
-
-
         #region Physics.OverlapSphere
 
-        //Do a OverlapSphere to see if we are looking at an interactable object
-        Collider[] hitColliders = Physics.OverlapSphere(eyes.position, overlapRadius, interactableMask);
-
-        if (hitColliders.Length.Equals(0))
-        {   
-            //If we are not looking at anything, But were looking at something before, reset the lookingAt variable
-            if(lookingAt != IInteractable.InteractionType.None)
-                lookingAt = IInteractable.InteractionType.None;
-            
-            return;
-        }
-
-        var closest = hitColliders.Where(x => x.GetType() == typeof(BoxCollider)).OrderBy(x => Vector3.Distance(x.transform.position, eyes.position)).FirstOrDefault()?.gameObject;
-        
-        if (closest == null) return;
-        
-        lookingAt = closest.GetComponent<IInteractable>().Interaction;
-
-        SwitchInteraction(lookingAt);
-        
-        #endregion
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        switch (currentMode)
         {
-            //Debug.Log("Test");
-            if (coolDownTimer <= 0)
-                onInteract?.Invoke();
+            case GameMode.InWorld:
+                //Do a OverlapSphere to see if we are looking at an interactable object
+                Collider[] hitColliders = Physics.OverlapSphere(eyes.position, overlapRadius, interactableMask);
+
+                if (hitColliders.Length.Equals(0))
+                {
+                    //If we are not looking at anything, But were looking at something before, reset the lookingAt variable
+                    if (lookingAt != IInteractable.InteractionType.None)
+                            lookingAt = IInteractable.InteractionType.None;
+
+                    return;
+                }
+
+                var closest = hitColliders.Where(x => x.GetType() == typeof(BoxCollider))
+                    .OrderBy(x => Vector3.Distance(x.transform.position, eyes.position)).FirstOrDefault()?.gameObject;
+
+                if (closest == null) return;
+
+                lookingAt = closest.GetComponent<IInteractable>().Interaction;
+
+                SwitchInteraction(lookingAt);
+
+                #endregion
+
+                if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    //Debug.Log("Test");
+                    if (coolDownTimer <= 0)
+                        onInteract?.Invoke();
+                }
+
+
+                if (Input.GetKeyDown(KeyCode.I))
+                {
+                    currentMode = GameMode.InMenu;
+                }
+
+                break;
+            
+            case GameMode.InMenu:
+                
+                
+                break;
         }
     }
+
 
     public void SwitchInteraction(IInteractable.InteractionType interaction)
     {
@@ -151,4 +143,12 @@ public class PlayerInteraction : MonoBehaviour
             Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(eyes.position, overlapRadius);
     }
+
+    private enum GameMode
+    {
+        InWorld,
+        InMenu,
+        InFishing
+    }
+
 }

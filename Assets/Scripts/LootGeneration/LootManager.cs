@@ -13,7 +13,7 @@ public class LootManager : MonoBehaviour
     }
 
 
-    public GameObject GenerateItem(LootTable table)
+    public static GameObject GenerateItem(LootTable table)
     {
         var availableItems = table.items.ToList();
         
