@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8190d41102ae2fd4cb336d6992419cd8, type: 3}
   m_Name: Item_OakWood 1
   m_EditorClassIdentifier: 
-  id: item_mapleWood
+  id: item_acorn
   type: 0
   displayName: Maple Wood
   icon: {fileID: 21300000, guid: 26deab4d09dc3184bbfb0863e72198a3, type: 3}

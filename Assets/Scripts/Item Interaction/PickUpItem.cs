@@ -20,7 +20,7 @@ public class PickUpItem : MonoBehaviour
 
    private void OnTriggerEnter(Collider other)
    {
-      if(other.transform.root.CompareTag("Player"))
+      if(other.transform.root.transform.GetChild(0).CompareTag("Player"))
       {
          OnPickup();
       }

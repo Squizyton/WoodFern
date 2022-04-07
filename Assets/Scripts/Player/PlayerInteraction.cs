@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cinemachine;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -27,10 +28,15 @@ public class PlayerInteraction : MonoBehaviour
     [Title("Current Interaction Mode")]
     [SerializeField] private GameMode currentMode;
 
+
+    [Title("Other Variables")] [SerializeField] private CinemachineFreeLook camera;
+    
     [Title("Debug Values")] public GameObject closestOverlap;
     public bool showRay;
     public bool showOverlap;
 
+    
+    
     private void Awake()
     {
         instance = this;
@@ -44,6 +50,15 @@ public class PlayerInteraction : MonoBehaviour
         {
             case GameMode.InWorld:
                 //Do a OverlapSphere to see if we are looking at an interactable object
+                
+                if (Input.GetKeyDown(KeyCode.I))
+                {
+                    Debug.Log("Pressed I");
+                    InventoryUIManager.instance.OpenInventory();
+                    currentMode = GameMode.InMenu;
+                }
+                
+                
                 Collider[] hitColliders = Physics.OverlapSphere(eyes.position, overlapRadius, interactableMask);
 
                 if (hitColliders.Length.Equals(0))
@@ -68,23 +83,28 @@ public class PlayerInteraction : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    //Debug.Log("Test");
+                    //Debug.Log("Test");    
                     if (coolDownTimer <= 0)
                         onInteract?.Invoke();
                 }
 
 
-                if (Input.GetKeyDown(KeyCode.I))
-                {
-                    currentMode = GameMode.InMenu;
-                }
+             
 
                 break;
             
             case GameMode.InMenu:
-                
-                
+                if (Input.GetKeyDown(KeyCode.I))
+                {
+                    InventoryUIManager.instance.CloseInventory();
+                    currentMode = GameMode.InWorld;
+                }
                 break;
+            case GameMode.InFishing:
+                //TODO  Add fishing code here <-----------------------------------------------------
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
