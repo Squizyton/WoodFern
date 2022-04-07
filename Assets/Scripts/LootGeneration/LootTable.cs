@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,8 +14,9 @@ public class LootTable : ScriptableObject
 }
 
 
+[Serializable]
 public struct ItemDrop
 {
-    public InventoryItemData item;
+    public GameObject itemPrefab;
     public int weight;
 }

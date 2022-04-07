@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b84ee850199abbc4d92cd6a0d0c4a1ca, type: 3}
-  m_Name: RatingSetup
+  m_Script: {fileID: 11500000, guid: 7ec3c726fdaee5f4ba90409fb0254b9d, type: 3}
+  m_Name: Maple Tree
   m_EditorClassIdentifier: 
-  active: 1
-  counter: 5
-  lastCheck: 458153.0781855812
+  includedTables: []
+  items:
+  - itemPrefab: {fileID: 1904265976335008388, guid: f184cea55c635224f8e053cd380c3197,
+      type: 3}
+    weight: 60
