@@ -20,7 +20,6 @@ public class OakWood : BasicTree
     
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.transform.name);
         if (other.CompareTag("Tool"))
         {
             OnHit();

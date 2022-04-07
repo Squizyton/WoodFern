@@ -20,9 +20,6 @@ public class PickUpItem : MonoBehaviour
 
    private void OnTriggerEnter(Collider other)
    {
-      
-      Debug.Log("Collided with " + other.name);
-      
       if(other.transform.root.CompareTag("Player"))
       {
          OnPickup();

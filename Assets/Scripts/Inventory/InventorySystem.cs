@@ -47,6 +47,7 @@ public class InventorySystem : MonoBehaviour
             //add the item to the dictionary
             itemDictionary.Add(reference, newItem);
         }
+        InventoryUIManager.instance.ItemAcquired(reference, amount);
     }
     
     public void RemoveItem(InventoryItemData reference)
