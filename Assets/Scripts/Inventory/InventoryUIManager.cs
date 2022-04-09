@@ -15,7 +15,9 @@ public class InventoryUIManager : MonoBehaviour
     public GameObject inventorySlotPrefab;
     
     [SerializeField]private GameObject slotParent;
+    [SerializeField] private Transform[] slots;
     private List<GameObject>currentInventorySlots;
+    private List<GameObject>currentlySpawnedSlots;
     
 
     [Title("Above Head UI")]
@@ -33,7 +35,7 @@ public class InventoryUIManager : MonoBehaviour
     {
         //If the inventory ui is active, then we want to deactivate it
         
-        currentInventorySlots = new List<GameObject>();
+        currentlySpawnedSlots = new List<GameObject>();
         
         CloseInventory();
     }
@@ -60,10 +62,10 @@ public class InventoryUIManager : MonoBehaviour
 
     private void ClearInventory()
     {
-        currentInventorySlots.Clear();
-        foreach (Transform child in slotParent.transform)
+        if (currentlySpawnedSlots.Count <= 0) return;
+        foreach (var item in currentlySpawnedSlots)
         {
-            Destroy(child.gameObject);
+            Destroy(item);
         }
     }
     
@@ -72,13 +74,17 @@ public class InventoryUIManager : MonoBehaviour
     public void RefreshInventory()
     {
         ClearInventory();
+        var index = -1;
+
         foreach (var item in InventorySystem.instance.inventoryItems )
         {
-            var slotUI = Instantiate(inventorySlotPrefab, slotParent.transform);
+            index++;
+            var slotUI = Instantiate(inventorySlotPrefab, slots[index]);
             var uiVariables = slotUI.GetComponent<ItemUISlot>();
             uiVariables.itemCount.SetText(item.stackSize.ToString());
             uiVariables.itemName.SetText(item.itemData.displayName);
             uiVariables.itemSprite.sprite = item.itemData.icon;
+            currentlySpawnedSlots.Add(slotUI);
         }
     }
 
