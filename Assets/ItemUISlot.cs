@@ -9,4 +9,6 @@ public class ItemUISlot : MonoBehaviour
     public Image itemSprite;
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemCount;
+    public Slot previousSlot;
+    public Slot nextSlot;
 }
