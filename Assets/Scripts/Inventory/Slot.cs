@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class Slot : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+   public int slotNumber;
+   public ItemUISlot currentItem;
+   
+   public void AddItem(ItemUISlot item)
+   {
+       currentItem = item;
+   }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

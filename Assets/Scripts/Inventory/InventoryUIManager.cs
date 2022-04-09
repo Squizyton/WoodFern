@@ -15,8 +15,7 @@ public class InventoryUIManager : MonoBehaviour
     public GameObject inventorySlotPrefab;
     
     [SerializeField]private GameObject slotParent;
-    [SerializeField] private Transform[] slots;
-    private List<GameObject>currentInventorySlots;
+    [SerializeField] private Slot[] slots;
     private List<GameObject>currentlySpawnedSlots;
     
 
@@ -40,9 +39,13 @@ public class InventoryUIManager : MonoBehaviour
         CloseInventory();
     }
 
-    //Todo: Make inventory Grid Based
-    
-    
+
+    private void Update()
+    {
+        
+    }
+
+
     //Open inventory
     public void OpenInventory()
     {
@@ -78,13 +81,21 @@ public class InventoryUIManager : MonoBehaviour
 
         foreach (var item in InventorySystem.instance.inventoryItems )
         {
+            //Increase the index
             index++;
-            var slotUI = Instantiate(inventorySlotPrefab, slots[index]);
+            //Instantiate the slot
+            var slotUI = Instantiate(inventorySlotPrefab, slots[index].transform);
+            //Acquire the slot variables
             var uiVariables = slotUI.GetComponent<ItemUISlot>();
+            //Set the slot variables
             uiVariables.itemCount.SetText(item.stackSize.ToString());
             uiVariables.itemName.SetText(item.itemData.displayName);
             uiVariables.itemSprite.sprite = item.itemData.icon;
+            
+            //Add the slot to the list
             currentlySpawnedSlots.Add(slotUI);
+            //Add the item to the slot so Inventory knows it can be moved
+            slots[index].AddItem(uiVariables);
         }
     }
 
