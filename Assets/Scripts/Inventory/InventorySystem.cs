@@ -41,8 +41,7 @@ public class InventorySystem : MonoBehaviour
             Debug.Log($"Adding Item: {reference.id}");
             
             //Create a new item
-            var newItem  = new InventoryItem(reference);
-            newItem.AddToStack(amount);
+            var newItem  = new InventoryItem(reference,amount); 
             //Add the item to the inventory
             inventoryItems.Add(newItem);
             //add the item to the dictionary

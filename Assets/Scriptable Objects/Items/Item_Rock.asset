@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8190d41102ae2fd4cb336d6992419cd8, type: 3}
-  m_Name: Item_OakWood 1
+  m_Name: Item_Rock
   m_EditorClassIdentifier: 
-  id: item_acorn
+  id: item_rock
   type: 0
-  displayName: Maple Wood
-  icon: {fileID: 21300000, guid: 26deab4d09dc3184bbfb0863e72198a3, type: 3}
+  displayName: A Rock
+  icon: {fileID: 21300000, guid: d198ef83f2dd4bb46aaaa4aaf34b388c, type: 3}
   prefab: {fileID: 0}
   isStackable: 1
   maxStack: 999

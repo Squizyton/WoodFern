@@ -13,7 +13,7 @@ public class InventoryItem
    public int stackSize { get; private set; }
    
    //Constructor
-   public InventoryItem(InventoryItemData itemData, int amount = 1)
+   public InventoryItem(InventoryItemData itemData, int amount)
    {
       this.itemData = itemData;
       AddToStack(amount);

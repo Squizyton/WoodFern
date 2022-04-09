@@ -8,8 +8,7 @@ namespace Rocks
         [Title("Rock Variables Variables")]
         [SerializeField] protected int health = 5;
         [SerializeField] protected LootTable lootTable;
-        [SerializeField] protected float radius;
-        [SerializeField] protected Transform materialSpawnPoint;
+        
 
         private void Awake()
         {

@@ -87,10 +87,7 @@ public class PlayerInteraction : MonoBehaviour
                     if (coolDownTimer <= 0)
                         onInteract?.Invoke();
                 }
-
-
-             
-
+                
                 break;
             
             case GameMode.InMenu:
@@ -120,6 +117,9 @@ public class PlayerInteraction : MonoBehaviour
             case IInteractable.InteractionType.Chop:
                 onInteract += Chop;
                 break;
+            case IInteractable.InteractionType.Mine :
+                onInteract += Mine;
+                break;
         }
     }
 
@@ -129,6 +129,12 @@ public class PlayerInteraction : MonoBehaviour
     {
         PlayerMovement.instance.anim.SetTrigger("chop");
         SetTimer(2.6f);
+    }
+
+    public void Mine()
+    {
+        PlayerMovement.instance.anim.SetTrigger("mine");
+        SetTimer(4f);
     }
 
     #endregion
