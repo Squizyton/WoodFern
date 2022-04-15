@@ -29,6 +29,7 @@ public class InventoryUIManager : MonoBehaviour
 
     [SerializeField] private Transform aboveHead;
 
+    [SerializeField] private Transform holder;
 
     private void Awake()
     {
@@ -85,7 +86,8 @@ public class InventoryUIManager : MonoBehaviour
             //Set the item to item being held
             itemBeingHeld = overSlot.currentItem;
             //SEt item to be child of big parent
-            itemBeingHeld.transform.SetParent(overSlot.transform.parent);
+            //itemBeingHeld.transform.SetParent(overSlot.transform.parent);
+            itemBeingHeld.transform.SetParent(holder.transform);
             //TODO: Turn off the name of the item and make it transparent
         }
 

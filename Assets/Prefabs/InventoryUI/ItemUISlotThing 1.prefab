@@ -433,6 +433,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7391413598897982436}
   - component: {fileID: 7391413598897982459}
+  - component: {fileID: -2888100152295965140}
   m_Layer: 0
   m_Name: ItemUISlotThing 1
   m_TagString: Untagged
@@ -480,3 +481,14 @@ MonoBehaviour:
   itemCount: {fileID: 7391413598853980361}
   previousSlot: {fileID: 0}
   nextSlot: {fileID: 0}
+--- !u!210 &-2888100152295965140
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7391413598897982437}
+  m_Enabled: 1
+  m_SortingLayerID: -356595749
+  m_SortingLayer: 3
+  m_SortingOrder: 2
