@@ -18,6 +18,8 @@ public class InventorySystem : MonoBehaviour
 
     public List<InventoryItem> inventoryItems { get; private set; }
 
+    public InventoryItemData test1;
+    public InventoryItemData test2;
 
     private void Awake()
     {
@@ -62,5 +64,12 @@ public class InventorySystem : MonoBehaviour
             inventoryItems.Remove(value);
             itemDictionary.Remove(reference);
         }
+    }
+    
+    [ContextMenu("Test")]
+    public void AddTestItems()
+    {
+        AddItem(test1,1);
+        AddItem(test2, 1);
     }
 }

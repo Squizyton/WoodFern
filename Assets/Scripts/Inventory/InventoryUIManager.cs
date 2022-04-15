@@ -50,35 +50,70 @@ public class InventoryUIManager : MonoBehaviour
     private void Update()
     {
         if (!inventoryUI.activeSelf) return;
-
+        
         if (Input.GetMouseButton(0) && overSlot != null)
         {
-            Debug.Log("Mouse button down");
-            if (overSlot.currentItem != null)
-            {
-                holdingSomething = true;
-                itemBeingHeld = overSlot.currentItem;
-                overSlot.currentItem.transform.SetParent(null);
-                //have the item being held to follow the mouse
-                itemBeingHeld.transform.position = Input.mousePosition;
-                //TODO: Turn off the name of the item and make it transparent
-            }
+            PickUpItem();
+        }
 
-           
+        if (itemBeingHeld != null)
+        {
+            itemBeingHeld.gameObject.transform.position = Input.mousePosition;
+        }
+
+
+        if (!Input.GetMouseButtonUp(0)) return;
+        if (!holdingSomething) return;
+        
+        DropItem();
+        
+
+        
+    }
+
+
+
+
+    private void PickUpItem()
+    {
+        Debug.Log("Mouse button down");
+        //If mouse is over a slot and we are not holding something
+        if (overSlot.currentItem != null && !holdingSomething)
+        {
+            //Holding something = true
+            holdingSomething = true;
+            //Set the item to item being held
+            itemBeingHeld = overSlot.currentItem;
+            //SEt item to be child of big parent
+            itemBeingHeld.transform.SetParent(overSlot.transform.parent);
+            //TODO: Turn off the name of the item and make it transparent
         }
 
         if (holdingSomething)
         {
             itemBeingHeld.nextSlot = overSlot;
         }
-        
-        if (!Input.GetMouseButtonUp(0)) return;
-        if (!holdingSomething) return;
-        //If the item is over a slot that's empty, then we want to move the item to that slot
-        if (overSlot.currentItem == null)
+    }
+
+
+
+    private void DropItem()
+    {
+        if (itemBeingHeld.nextSlot != null && overSlot)
         {
-            itemBeingHeld.previousSlot.currentItem = null;
-             itemBeingHeld.nextSlot.AddItem(itemBeingHeld);
+            if (itemBeingHeld.nextSlot.currentItem != null)
+            {
+                Debug.Log("swapping");
+                var newSlotItem = itemBeingHeld.nextSlot.currentItem;
+                newSlotItem.previousSlot = itemBeingHeld.previousSlot;
+                newSlotItem.previousSlot.AddItem(newSlotItem);
+                newSlotItem.transform.SetParent(newSlotItem.previousSlot.transform);
+                newSlotItem.transform.localPosition = Vector3.zero;
+            }
+            if(itemBeingHeld.previousSlot.currentItem == itemBeingHeld)
+                itemBeingHeld.previousSlot.currentItem = null;
+            
+            itemBeingHeld.nextSlot.AddItem(itemBeingHeld);
             itemBeingHeld.transform.SetParent(itemBeingHeld.nextSlot.transform);
             itemBeingHeld.transform.localPosition = Vector3.zero;
             itemBeingHeld.previousSlot = itemBeingHeld.nextSlot;
@@ -86,17 +121,17 @@ public class InventoryUIManager : MonoBehaviour
             holdingSomething = false;
         }
         //If the are holding but not over a valid slot then put it back in it's previous slot
-        else
+        else if (overSlot == null && holdingSomething)
         {
             itemBeingHeld.transform.SetParent(itemBeingHeld.previousSlot.transform);
             itemBeingHeld.transform.localPosition = Vector3.zero;
             holdingSomething = false;
         }
-
+        
         itemBeingHeld = null;
     }
 
-
+    #region Open/Close Inventory
     //Open inventory
     public void OpenInventory()
     {
@@ -114,50 +149,61 @@ public class InventoryUIManager : MonoBehaviour
         ClearInventory();
     }
 
-    private void ClearInventory()
-    {
-        if (currentlySpawnedSlots.Count <= 0) return;
-        foreach (var item in currentlySpawnedSlots)
+    
+    #endregion
+
+
+
+    #region  Inventory Backend
+
+     private void ClearInventory()
         {
-            Destroy(item);
+            if (currentlySpawnedSlots.Count <= 0) return;
+            foreach (var item in currentlySpawnedSlots)
+            {
+                Destroy(item);
+            }
+        }
+    
+        //Update the inventory slots
+        //TODO: Automatically update the inventory slots when the inventory changes
+        public void RefreshInventory()
+        {
+            ClearInventory();
+            var index = -1;
+    
+            foreach (var item in InventorySystem.instance.inventoryItems)
+            {
+                //Increase the index
+                index++;
+                //Instantiate the slot
+                var slotUI = Instantiate(inventorySlotPrefab, slots[index].transform);
+                //Acquire the slot variables
+                var uiVariables = slotUI.GetComponent<ItemUISlot>();
+                //Set the slot variables
+                uiVariables.itemCount.SetText(item.stackSize.ToString());
+                uiVariables.itemName.SetText(item.itemData.displayName);
+                uiVariables.itemSprite.sprite = item.itemData.icon;
+    
+                uiVariables.previousSlot = slots[index];
+                //Add the slot to the list
+                currentlySpawnedSlots.Add(slotUI);
+                //Add the item to the slot so Inventory knows it can be moved
+                slots[index].AddItem(uiVariables);
+            }
+        }
+    
+    
+        public void ItemAcquired(InventoryItemData data, int stackAmount)
+        {
+            //Instiate the object
+            var item = Instantiate(objectAcquiredPrefab, aboveHead.position, Quaternion.identity, aboveHead);
+            //Change the icon to match the item data icon
+            item.GetComponent<Image>().sprite = data.icon;
+            //Change the text to match the stack amount
+            item.GetComponentInChildren<TextMeshProUGUI>().text = "+" + stackAmount;
         }
     }
 
-    //Update the inventory slots
-    //TODO: Automatically update the inventory slots when the inventory changes
-    public void RefreshInventory()
-    {
-        ClearInventory();
-        var index = -1;
-
-        foreach (var item in InventorySystem.instance.inventoryItems)
-        {
-            //Increase the index
-            index++;
-            //Instantiate the slot
-            var slotUI = Instantiate(inventorySlotPrefab, slots[index].transform);
-            //Acquire the slot variables
-            var uiVariables = slotUI.GetComponent<ItemUISlot>();
-            //Set the slot variables
-            uiVariables.itemCount.SetText(item.stackSize.ToString());
-            uiVariables.itemName.SetText(item.itemData.displayName);
-            uiVariables.itemSprite.sprite = item.itemData.icon;
-
-            //Add the slot to the list
-            currentlySpawnedSlots.Add(slotUI);
-            //Add the item to the slot so Inventory knows it can be moved
-            slots[index].AddItem(uiVariables);
-        }
-    }
-
-
-    public void ItemAcquired(InventoryItemData data, int stackAmount)
-    {
-        //Instiate the object
-        var item = Instantiate(objectAcquiredPrefab, aboveHead.position, Quaternion.identity, aboveHead);
-        //Change the icon to match the item data icon
-        item.GetComponent<Image>().sprite = data.icon;
-        //Change the text to match the stack amount
-        item.GetComponentInChildren<TextMeshProUGUI>().text = "+" + stackAmount;
-    }
-}
+    #endregion
+   

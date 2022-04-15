@@ -16,7 +16,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("Pointer Enter");
+     
         InventoryUIManager.instance.overSlot = this;
     }
 

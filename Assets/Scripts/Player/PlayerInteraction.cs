@@ -29,7 +29,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private GameMode currentMode;
 
 
-    [Title("Other Variables")] [SerializeField] private CinemachineFreeLook camera;
+    [Title("Other Variables")] [SerializeField] private CinemachineVirtualCamera inventoryCamera;
     
     [Title("Debug Values")] public GameObject closestOverlap;
     public bool showRay;
@@ -52,7 +52,7 @@ public class PlayerInteraction : MonoBehaviour
                 //Do a OverlapSphere to see if we are looking at an interactable object
                 
                 if (Input.GetKeyDown(KeyCode.I))
-                {
+                {inventoryCamera.Priority = 40;
                     Debug.Log("Pressed I");
                     InventoryUIManager.instance.OpenInventory();
                     currentMode = GameMode.InMenu;
@@ -93,6 +93,7 @@ public class PlayerInteraction : MonoBehaviour
             case GameMode.InMenu:
                 if (Input.GetKeyDown(KeyCode.I))
                 {
+                    inventoryCamera.Priority = 0;
                     InventoryUIManager.instance.CloseInventory();
                     currentMode = GameMode.InWorld;
                 }
@@ -111,8 +112,7 @@ public class PlayerInteraction : MonoBehaviour
         switch (interaction)
         {
             case IInteractable.InteractionType.None:
-                if (onInteract != null)
-                    onInteract = null;
+                onInteract = null;
                 break;
             case IInteractable.InteractionType.Chop:
                 onInteract += Chop;
@@ -162,11 +162,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (showRay)
+        if(showRay)
             Debug.DrawLine(eyes.position, eyes.position + transform.forward * lookDistance, Color.red);
 
-        if (showOverlap)
-            Gizmos.color = Color.magenta;
+        if (!showOverlap) return;
+        Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(eyes.position, overlapRadius);
     }
 

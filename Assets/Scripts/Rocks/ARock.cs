@@ -13,7 +13,7 @@ public class ARock : BasicRock
 
         var rock = Instantiate(LootManager.GenerateItem(lootTable), transform.position + new Vector3(0,2,0), Quaternion.identity);
             
-        rock.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(0,2),Random.Range(0,2),Random.Range(0,2)),ForceMode.Impulse);
+        rock.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(1,3),Random.Range(0,2),Random.Range(1,3)),ForceMode.Impulse);
         
         if (health <= 0)
         {
